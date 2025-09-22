@@ -6,3 +6,6 @@ run tests ```flutter test```
 
 to run debug mode
 ```flutter run -d chrome ```
+
+to build
+```flutter build web```
