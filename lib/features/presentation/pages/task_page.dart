@@ -69,15 +69,19 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
-  Future<void> _removeTask(int index) async {
+  Future<void> _removeTask(String id) async {
+    final index = _tasks.indexWhere((t) => t.id == id);
+    if (index == -1) return;
+
     final removedTask = _tasks[index];
 
     _tasks.removeAt(index);
-    await _taskUseCase.remove(removedTask.id);
+
+    await _taskUseCase.remove(id);
 
     _listKey.currentState?.removeItem(
       index,
-      (context, animation) => _buildTaskItem(removedTask, index, animation),
+          (context, animation) => _buildTaskItem(removedTask, index, animation),
       duration: AppAnimation.duration,
     );
   }
@@ -122,7 +126,7 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     IconButton(
                       icon: Icon(Icons.delete, color: AppColors.deleteIcon),
-                      onPressed: () => _removeTask(index),
+                      onPressed: () => _removeTask(task.id),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     )
@@ -206,11 +210,12 @@ class _TaskPageState extends State<TaskPage> {
           ),
           _filters(),
           Expanded(
-            child: ListView.builder(
-              itemCount: _filteredTasks.length,
-              itemBuilder: (context, index) {
+            child: AnimatedList(
+              key: _listKey,
+              initialItemCount: _filteredTasks.length,
+              itemBuilder: (context, index, animation) {
                 final task = _filteredTasks[index];
-                return _buildTaskItem(task, index, kAlwaysCompleteAnimation);
+                return _buildTaskItem(task, index, animation);
               },
             ),
           ),
