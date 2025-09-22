@@ -135,8 +135,9 @@ class _TaskPageState extends State<TaskPage> {
                 const SizedBox(height: 8),
                 Text(
                   task.text,
-                  style:
-                  AppTextStyle.mid,
+                  style: AppTextStyle.mid.copyWith(
+                    decoration: task.isDone ? TextDecoration.lineThrough : TextDecoration.none,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
